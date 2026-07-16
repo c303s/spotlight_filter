@@ -357,7 +357,9 @@ def _prompt_choice(prompt: str, options: List[str]) -> str:
         for idx, option in enumerate(options, start=1):
             print(f"  {idx}. {option}")
 
-        raw = input("Select an option by number: ").strip()
+        sys.stdout.write("Select an option by number: ")
+        sys.stdout.flush()
+        raw = input().strip()
         if not raw.isdigit():
             print("Invalid choice. Please enter a number.")
             continue
@@ -442,7 +444,6 @@ def run_interactive_selection(items: List[NormalizedVuln]) -> tuple[List[Normali
     print(f"\nFetched {len(items)} vulnerability records.\n")
 
     score_filtered, selected_min_score = _prompt_cvss_score_filter(items)
-    print(f"Records after score filter: {len(score_filtered)}")
 
     selected_vector = _prompt_category_filter(
         "\nSelect attack vector",
@@ -487,6 +488,12 @@ def print_equivalent_command(selection: InteractiveSelection, limit: Optional[in
     print()
     print("Equivalent command:")
     print(" ".join(command_parts))
+
+
+def print_results_header() -> None:
+    print()
+    print("Here are the results:")
+    print()
 
 
 class Spinner:
@@ -841,6 +848,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         if args.json:
             print_json(filtered)
         else:
+            print_results_header()
             print_table(filtered)
 
         if args.show_summary:
