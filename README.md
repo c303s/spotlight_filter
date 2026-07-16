@@ -46,7 +46,7 @@ If command lookup fails in your shell, run with module form from this repo:
 
 ```bash
 source .venv/bin/activate
-PYTHONPATH=src python -m cs_cve_tool.cli --interactive
+python -m spotlight_filter --interactive
 ```
 
 If credentials are missing, the tool asks for them and saves them into `.env`.
@@ -75,8 +75,7 @@ spotlight_filter --interactive
 If command discovery is delayed on PATH, run:
 
 ```powershell
-$env:PYTHONPATH="src"
-py -m cs_cve_tool.cli --interactive
+py -m spotlight_filter --interactive
 ```
 
 ## Usage
@@ -115,6 +114,12 @@ Fetches data up front, then prompts in this order:
 1. CVSS score
 2. Attack vector
 3. Attack complexity
+
+After the filters are applied, the tool prints:
+
+```text
+Here are the results:
+```
 
 ```bash
 spotlight_filter --interactive
