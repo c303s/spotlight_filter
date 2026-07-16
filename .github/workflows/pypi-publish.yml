@@ -42,7 +42,7 @@ jobs:
       - build
     environment:
       name: pypi
-      url: https://pypi.org/p/falcon-cve-tool
+      url: https://pypi.org/p/spotlight-filter
     steps:
       - name: Download distributions
         uses: actions/download-artifact@v4

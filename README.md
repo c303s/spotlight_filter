@@ -1,4 +1,4 @@
-# CrowdStrike Vulnerability Filter
+# CrowdStrike Spotlight Filter
 
 Python CLI built on FalconPy to query CrowdStrike Spotlight vulnerabilities and investigate CVE attack vectors and attack complexity.
 
@@ -46,13 +46,13 @@ It validates credentials before continuing.
 py -m pip install --user pipx
 py -m pipx ensurepath
 # Close and reopen PowerShell after ensurepath
-pipx install falcon-cve-tool
+pipx install spotlight-filter
 ```
 
 4. Run the tool:
 
 ```powershell
-falcon-cve --interactive
+spotlight_filter --interactive
 ```
 
 If command discovery is delayed on PATH, run:
@@ -66,19 +66,19 @@ py -m cs_cve_tool.cli --interactive
 ### Basic query
 
 ```bash
-falcon-cve --limit 50
+spotlight_filter --limit 50
 ```
 
 ### Search a specific CVE
 
 ```bash
-falcon-cve --cve CVE-2025-12345 --limit 100
+spotlight_filter --cve CVE-2025-12345 --limit 100
 ```
 
 ### Hunt remote, low-complexity vulnerabilities
 
 ```bash
-falcon-cve --attack-vector Network --attack-complexity Low --min-score 7.0 --limit 200
+spotlight_filter --attack-vector Network --attack-complexity Low --min-score 7.0 --limit 200
 ```
 
 You can also use short aliases in filters:
@@ -88,7 +88,7 @@ You can also use short aliases in filters:
 ### Show observed category counts
 
 ```bash
-falcon-cve --show-summary --limit 200
+spotlight_filter --show-summary --limit 200
 ```
 
 ### Interactive selection flow
@@ -99,31 +99,31 @@ Fetches data up front, then prompts in this order:
 3. Attack complexity
 
 ```bash
-falcon-cve --interactive
+spotlight_filter --interactive
 ```
 
 ### JSON output
 
 ```bash
-falcon-cve --status open --json
+spotlight_filter --status open --json
 ```
 
 ### Export CSV and HTML
 
 ```bash
-falcon-cve --status open --show-summary --csv-out report.csv --html-out report.html
+spotlight_filter --status open --show-summary --csv-out report.csv --html-out report.html
 ```
 
 ### Add compact summary row to CSV
 
 ```bash
-falcon-cve --status open --csv-out report.csv --csv-summary-row
+spotlight_filter --status open --csv-out report.csv --csv-summary-row
 ```
 
 ### Optional base URL override (EU-1 is default)
 
 ```bash
-falcon-cve --base-url https://api.eu-1.crowdstrike.com
+spotlight_filter --base-url https://api.eu-1.crowdstrike.com
 ```
 
 ## Notes
@@ -145,7 +145,7 @@ falcon-cve --base-url https://api.eu-1.crowdstrike.com
 ### Fastest start (one command after PyPI release)
 
 ```bash
-pipx install falcon-cve-tool
+pipx install spotlight-filter
 ```
 
 ### Install pipx if needed
@@ -161,17 +161,17 @@ exec "$SHELL" -l
 Then install the tool:
 
 ```bash
-pipx install falcon-cve-tool
-falcon-cve --help
+pipx install spotlight-filter
+spotlight_filter --help
 ```
 
 ### Minimal fallback (plain pip)
 
 ```bash
-python3 -m pip install --user falcon-cve-tool
+python3 -m pip install --user spotlight-filter
 ```
 
-If `falcon-cve` is not found in your shell after pip install, run it with:
+If `spotlight_filter` is not found in your shell after pip install, run it with:
 
 ```bash
 python3 -m cs_cve_tool.cli --help

@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "falcon-cve-tool"
+name = "spotlight-filter"
 version = "0.1.0"
-description = "CrowdStrike Falcon Spotlight CVE investigation CLI"
+description = "CrowdStrike Spotlight vulnerability investigation CLI"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-falcon-cve = "cs_cve_tool.cli:main"
+spotlight_filter = "cs_cve_tool.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

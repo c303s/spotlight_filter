@@ -4,7 +4,7 @@ This project is ready for GitHub releases and PyPI publishing.
 
 ## 1) Create the GitHub repository
 
-1. Create a new repository on GitHub (for example: `falcon-cve-tool`).
+1. Create a new repository on GitHub (for example: `spotlight_filter`).
 2. Push your local project:
 
 ```bash
@@ -30,7 +30,7 @@ Before the first PyPI publish, configure a trusted publisher on PyPI.
 
 This repository already contains `.github/workflows/pypi-publish.yml` using OpenID Connect (no API token needed).
 
-If `falcon-cve-tool` is already taken on PyPI, change `project.name` in `pyproject.toml` before the first release.
+If `spotlight-filter` is already taken on PyPI, change `project.name` in `pyproject.toml` before the first release.
 
 ## 3) Create a release tag
 
@@ -55,7 +55,7 @@ And publish them (GitHub Release + PyPI).
 ### Option A: One command from PyPI
 
 ```bash
-pipx install falcon-cve-tool
+pipx install spotlight-filter
 ```
 
 ### Option B: Install pipx first (if needed, no Brew)
@@ -71,22 +71,22 @@ exec "$SHELL" -l
 Install your tool from PyPI:
 
 ```bash
-pipx install falcon-cve-tool
+pipx install spotlight-filter
 ```
 
 Then run:
 
 ```bash
-falcon-cve --help
+spotlight_filter --help
 ```
 
 ### Option C: Plain pip from PyPI
 
 ```bash
-python3 -m pip install --user falcon-cve-tool
+python3 -m pip install --user spotlight-filter
 ```
 
-If the `falcon-cve` command is not available on PATH, run:
+If the `spotlight_filter` command is not available on PATH, run:
 
 ```bash
 python3 -m cs_cve_tool.cli --help

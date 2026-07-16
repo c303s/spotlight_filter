@@ -6,6 +6,7 @@ import html
 import itertools
 import json
 import os
+import queue
 import re
 import sys
 import threading
@@ -38,7 +39,7 @@ AC_LABELS = {
 
 DEFAULT_BASE_URL = "https://api.eu-1.crowdstrike.com"
 TOOL_VERSION = "0.0.1a"
-BUILD_DATE = date.today().strftime("%d-%m-%Y")
+BUILD_DATE = date.today().strftime("%d.%m.%Y")
 ENV_PATH = Path(".env")
 
 
@@ -217,7 +218,7 @@ def clear_screen() -> None:
 
 
 def print_greeting() -> None:
-    print("CrowdStrike Vulnerability Filter")
+    print("CrowdStrike Spotlight Filter")
     print("This is not an official tool.")
     print(f"Version: {TOOL_VERSION}")
     print(f"Build date: {BUILD_DATE}")
@@ -235,6 +236,42 @@ def _prompt_yes_no(prompt: str, default: bool = False) -> bool:
         if raw in {"n", "no"}:
             return False
         print("Please answer yes or no.")
+
+
+def _prompt_yes_no_timeout(prompt: str, default: bool = False, timeout_seconds: int = 5) -> bool:
+    suffix = "[Y/n]" if default else "[y/N]"
+    full_prompt = f"{prompt} {suffix}: "
+
+    if not sys.stdin.isatty():
+        return default
+
+    result: queue.Queue[Optional[str]] = queue.Queue()
+
+    def _reader() -> None:
+        try:
+            result.put(input(full_prompt).strip().lower())
+        except EOFError:
+            result.put(None)
+
+    reader_thread = threading.Thread(target=_reader, daemon=True)
+    reader_thread.start()
+    reader_thread.join(timeout_seconds)
+
+    if reader_thread.is_alive():
+        print()
+        print(f"No response received in {timeout_seconds}s. Defaulting to {'Yes' if default else 'No'}.")
+        return default
+
+    raw = result.get_nowait()
+    if not raw:
+        return default
+    if raw in {"y", "yes"}:
+        return True
+    if raw in {"n", "no"}:
+        return False
+
+    print("Invalid response. Defaulting to No.")
+    return default
 
 
 def _prompt_non_empty(prompt: str, default: Optional[str] = None, secret: bool = False) -> str:
@@ -267,7 +304,11 @@ def _collect_credentials_with_prompt(base_url_from_args: Optional[str], force_up
     should_update = force_update
 
     if has_file_creds and not force_update and sys.stdin.isatty():
-        should_update = _prompt_yes_no("Credentials found. Do you want to update them?", default=False)
+        should_update = _prompt_yes_no_timeout(
+            "Credentials found in .env. Do you want to update them?",
+            default=False,
+            timeout_seconds=5,
+        )
 
     if has_file_creds and not should_update:
         return FalconCredentials(
@@ -433,7 +474,7 @@ def run_interactive_selection(items: List[NormalizedVuln]) -> tuple[List[Normali
 
 
 def print_equivalent_command(selection: InteractiveSelection, limit: Optional[int]) -> None:
-    command_parts = ["falcon-cve"]
+    command_parts = ["spotlight_filter"]
     if selection.min_score is not None:
         command_parts.extend(["--min-score", f"{selection.min_score:g}"])
     if selection.attack_vector is not None and selection.attack_vector != "Unknown":
@@ -666,7 +707,7 @@ def export_html(items: List[NormalizedVuln], output_path: str) -> None:
 <head>
     <meta charset=\"utf-8\" />
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
-    <title>Falcon CVE Report</title>
+    <title>CrowdStrike Spotlight Filter Report</title>
     <style>
         :root {{
             --bg: #f7f6f3;
@@ -701,7 +742,7 @@ def export_html(items: List[NormalizedVuln], output_path: str) -> None:
 <body>
     <div class=\"wrap\">
         <div class=\"card\">
-            <h1>Falcon CVE Report</h1>
+            <h1>CrowdStrike Spotlight Filter Report</h1>
             <p>This is not an official CrowdStrike tool.</p>
             <p>Version: {TOOL_VERSION} | Build date: {BUILD_DATE}</p>
             <p>Total rows: {len(items)}</p>
@@ -743,7 +784,7 @@ def export_html(items: List[NormalizedVuln], output_path: str) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="falcon-cve",
+        prog="spotlight_filter",
         description="Query CrowdStrike Spotlight vulnerabilities and investigate CVE attack vectors/complexity.",
     )
 
