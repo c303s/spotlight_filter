@@ -32,6 +32,23 @@ cp .env.example .env
 
 Then edit `.env` with your real values.
 
+The `spotlight_filter` command is created when you run `pip install -e .` (or `pip install .`) in the active environment.
+
+### Run from local source (this repository)
+
+```bash
+source .venv/bin/activate
+pip install -e .
+spotlight_filter --interactive
+```
+
+If command lookup fails in your shell, run with module form from this repo:
+
+```bash
+source .venv/bin/activate
+PYTHONPATH=src python -m cs_cve_tool.cli --interactive
+```
+
 If credentials are missing, the tool asks for them and saves them into `.env`.
 If credentials already exist, the tool asks whether to update them (default: No).
 It validates credentials before continuing.
@@ -58,6 +75,7 @@ spotlight_filter --interactive
 If command discovery is delayed on PATH, run:
 
 ```powershell
+$env:PYTHONPATH="src"
 py -m cs_cve_tool.cli --interactive
 ```
 
@@ -174,5 +192,5 @@ python3 -m pip install --user spotlight-filter
 If `spotlight_filter` is not found in your shell after pip install, run it with:
 
 ```bash
-python3 -m cs_cve_tool.cli --help
+python3 -m spotlight_filter --help
 ```

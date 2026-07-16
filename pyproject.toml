@@ -18,6 +18,7 @@ spotlight_filter = "cs_cve_tool.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
+py-modules = ["spotlight_filter"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

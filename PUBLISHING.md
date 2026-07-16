@@ -89,7 +89,7 @@ python3 -m pip install --user spotlight-filter
 If the `spotlight_filter` command is not available on PATH, run:
 
 ```bash
-python3 -m cs_cve_tool.cli --help
+python3 -m spotlight_filter --help
 ```
 
 ## 5) Credential setup for end users
