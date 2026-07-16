@@ -1,4 +1,4 @@
-# Falcon CVE Investigation Tool
+# CrowdStrike Vulnerability Filter
 
 Python CLI built on FalconPy to query CrowdStrike Spotlight vulnerabilities and investigate CVE attack vectors and attack complexity.
 
@@ -9,6 +9,8 @@ Python CLI built on FalconPy to query CrowdStrike Spotlight vulnerabilities and 
 - Parses CVSS vector data to classify:
   - Attack Vector: Network, Adjacent Network, Local, Physical
   - Attack Complexity: Low, High
+- Clears the terminal on startup and displays a banner with version/build date.
+- Guides credential onboarding from `.env` and validates credentials before querying.
 - Applies client-side filtering for attack vector and attack complexity.
 - Shows observed category counts for attack vector and attack complexity.
 - Outputs table/JSON and can export CSV and HTML reports.
@@ -29,6 +31,35 @@ cp .env.example .env
 ```
 
 Then edit `.env` with your real values.
+
+If credentials are missing, the tool asks for them and saves them into `.env`.
+If credentials already exist, the tool asks whether to update them (default: No).
+It validates credentials before continuing.
+
+## Windows Quick Start
+
+1. Install Python 3.10+ from python.org (check "Add Python to PATH").
+2. Open PowerShell.
+3. Install pipx and the tool:
+
+```powershell
+py -m pip install --user pipx
+py -m pipx ensurepath
+# Close and reopen PowerShell after ensurepath
+pipx install falcon-cve-tool
+```
+
+4. Run the tool:
+
+```powershell
+falcon-cve --interactive
+```
+
+If command discovery is delayed on PATH, run:
+
+```powershell
+py -m cs_cve_tool.cli --interactive
+```
 
 ## Usage
 
@@ -109,16 +140,6 @@ falcon-cve --base-url https://api.eu-1.crowdstrike.com
   - `crowdstrike-falconpy`
 - This project is already configured with the correct dependency name in `pyproject.toml` and `requirements.txt`.
 
-## Share On GitHub
-
-For step-by-step publishing and release automation, see `PUBLISHING.md`.
-
-This repository includes a GitHub Actions workflow at `.github/workflows/release.yml`.
-When you push a tag like `v0.1.0`, it automatically builds package artifacts and creates a GitHub Release.
-
-This repository also includes `.github/workflows/pypi-publish.yml`.
-After PyPI trusted publishing is configured once, each tag push (for example `v0.1.0`) also publishes to PyPI.
-
 ## Easy Install For Other People
 
 ### Fastest start (one command after PyPI release)
@@ -127,7 +148,7 @@ After PyPI trusted publishing is configured once, each tag push (for example `v0
 pipx install falcon-cve-tool
 ```
 
-### Install pipx if needed (no Brew)
+### Install pipx if needed
 
 Install with `pipx` directly from Python and then run:
 

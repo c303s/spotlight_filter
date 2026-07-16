@@ -65,6 +65,38 @@ class FalconSpotlightClient:
 
         return rows if limit is None else rows[:limit]
 
+    def validate_credentials(self) -> tuple[bool, str]:
+        """Perform a lightweight API request to validate current credentials."""
+        try:
+            response = self._query_page(
+                filter_expression="status:'open'",
+                sort="updated_timestamp.desc",
+                limit=1,
+                after=None,
+            )
+        except Exception as exc:  # pragma: no cover - defensive guard for SDK/runtime failures
+            return False, str(exc)
+
+        if not isinstance(response, dict):
+            return False, "Unexpected API response type while validating credentials."
+
+        status_code = response.get("status_code")
+        if status_code == 200:
+            return True, "Credentials are valid."
+
+        body = response.get("body", {}) if isinstance(response.get("body"), dict) else {}
+        errors = body.get("errors", []) if isinstance(body.get("errors", []), list) else []
+        message = ""
+        if errors:
+            first = errors[0]
+            if isinstance(first, dict):
+                message = str(first.get("message") or first.get("code") or "")
+
+        if not message:
+            message = f"Validation failed with status code {status_code}."
+
+        return False, message
+
     def _query_page(self, filter_expression: str, sort: str, limit: int, after: Optional[str]) -> Dict[str, Any]:
         kwargs: Dict[str, Any] = {
             "filter": filter_expression,
