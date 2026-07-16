@@ -1,0 +1,13 @@
+Required API client scope(s) for this tool
+
+1) spotlight_vulnerabilities (Read)
+   - This is the scope family used by all Spotlight endpoints called by the tool.
+   - The tool only performs GET operations, so Read permission is sufficient.
+
+Endpoints used by this tool
+- GET /spotlight/queries/vulnerabilities/v1 (operation: queryVulnerabilities)
+- GET /spotlight/entities/vulnerabilities/v2 (operation: getVulnerabilities)
+
+Notes
+- Write permission for spotlight_vulnerabilities is not required for current functionality.
+- If you later add remediation lookups, they are also under the same scope family.
