@@ -14,7 +14,7 @@ Python CLI built on FalconPy to query CrowdStrike Spotlight vulnerabilities and 
 - Applies client-side filtering for attack vector and attack complexity.
 - Shows observed category counts for attack vector and attack complexity.
 - Outputs table/JSON and can export CSV and HTML reports.
-- Automatically refreshes `report.csv` and `report.html` on every run.
+- Automatically refreshes timestamped `report-YYYYMMDD-HHMMSS.csv` and `report-YYYYMMDD-HHMMSS.html` files on every run.
 
 ## Setup
 
@@ -138,7 +138,7 @@ spotlight_filter --status open --json
 spotlight_filter --status open --show-summary --csv-out report.csv --html-out report.html
 ```
 
-The tool also refreshes the default `report.csv` and `report.html` files on every run.
+The tool also refreshes timestamped `report-YYYYMMDD-HHMMSS.csv` and `report-YYYYMMDD-HHMMSS.html` files on every run.
 
 ### Add compact summary row to CSV
 

@@ -5,4 +5,6 @@ __pycache__/
 *.egg-info/
 report.csv
 report.html
+report-*.csv
+report-*.html
 .DS_Store

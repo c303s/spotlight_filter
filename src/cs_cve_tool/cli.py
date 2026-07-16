@@ -12,7 +12,7 @@ import sys
 import threading
 import time
 from collections import Counter
-from datetime import date
+from datetime import date, datetime
 from dataclasses import dataclass
 from getpass import getpass
 from pathlib import Path
@@ -41,8 +41,7 @@ DEFAULT_BASE_URL = "https://api.eu-1.crowdstrike.com"
 TOOL_VERSION = "0.0.1a"
 BUILD_DATE = date.today().strftime("%d.%m.%Y")
 ENV_PATH = Path(".env")
-DEFAULT_CSV_REPORT = "report.csv"
-DEFAULT_HTML_REPORT = "report.html"
+
 
 
 @dataclass
@@ -123,6 +122,11 @@ def _coalesce_non_empty(*values: Any) -> Optional[str]:
         if text:
             return text
     return None
+
+
+def _timestamped_report_name(extension: str, timestamp: Optional[str] = None) -> str:
+    timestamp = timestamp or datetime.now().strftime("%Y%m%d-%H%M%S")
+    return f"report-{timestamp}.{extension}"
 
 
 def build_filter(args: argparse.Namespace, include_min_score: bool = True) -> str:
@@ -853,10 +857,13 @@ def main(argv: Optional[List[str]] = None) -> int:
             print_results_header()
             print_table(filtered)
 
-        export_csv(filtered, DEFAULT_CSV_REPORT, include_summary_row=args.csv_summary_row)
-        export_html(filtered, DEFAULT_HTML_REPORT)
-        print(f"CSV exported to {DEFAULT_CSV_REPORT}")
-        print(f"HTML exported to {DEFAULT_HTML_REPORT}")
+        report_timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        default_csv_report = _timestamped_report_name("csv", report_timestamp)
+        default_html_report = _timestamped_report_name("html", report_timestamp)
+        export_csv(filtered, default_csv_report, include_summary_row=args.csv_summary_row)
+        export_html(filtered, default_html_report)
+        print(f"CSV exported to {default_csv_report}")
+        print(f"HTML exported to {default_html_report}")
 
         if args.show_summary:
             print_summary(filtered)
