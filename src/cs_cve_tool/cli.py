@@ -41,6 +41,8 @@ DEFAULT_BASE_URL = "https://api.eu-1.crowdstrike.com"
 TOOL_VERSION = "0.0.1a"
 BUILD_DATE = date.today().strftime("%d.%m.%Y")
 ENV_PATH = Path(".env")
+DEFAULT_CSV_REPORT = "report.csv"
+DEFAULT_HTML_REPORT = "report.html"
 
 
 @dataclass
@@ -850,6 +852,11 @@ def main(argv: Optional[List[str]] = None) -> int:
         else:
             print_results_header()
             print_table(filtered)
+
+        export_csv(filtered, DEFAULT_CSV_REPORT, include_summary_row=args.csv_summary_row)
+        export_html(filtered, DEFAULT_HTML_REPORT)
+        print(f"CSV exported to {DEFAULT_CSV_REPORT}")
+        print(f"HTML exported to {DEFAULT_HTML_REPORT}")
 
         if args.show_summary:
             print_summary(filtered)
