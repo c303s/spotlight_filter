@@ -12,7 +12,7 @@ import sys
 import threading
 import time
 from collections import Counter
-from datetime import date, datetime
+from datetime import datetime
 from dataclasses import dataclass
 from getpass import getpass
 from pathlib import Path
@@ -39,8 +39,18 @@ AC_LABELS = {
 
 DEFAULT_BASE_URL = "https://api.eu-1.crowdstrike.com"
 TOOL_VERSION = "0.0.1a"
-BUILD_DATE = date.today().strftime("%d.%m.%Y")
 ENV_PATH = Path(".env")
+
+
+def _resolve_build_date() -> str:
+    try:
+        modified = datetime.fromtimestamp(Path(__file__).stat().st_mtime)
+    except OSError:
+        modified = datetime.now()
+    return modified.strftime("%d.%m.%Y")
+
+
+BUILD_DATE = _resolve_build_date()
 
 
 
